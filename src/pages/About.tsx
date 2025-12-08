@@ -6,6 +6,7 @@ import PortfolioHeader from "@/components/PortfolioHeader";
 import PortfolioFooter from "@/components/PortfolioFooter";
 import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
+import { Portrait } from "@/types/gallery";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -26,13 +27,6 @@ const contactSchema = z.object({
 });
 
 type ContactFormValues = z.infer<typeof contactSchema>;
-
-interface Portrait {
-  src: string;
-  alt: string;
-  width: number;
-  height: number;
-}
 
 const About = () => {
   const [portrait, setPortrait] = useState<Portrait | null>(null);

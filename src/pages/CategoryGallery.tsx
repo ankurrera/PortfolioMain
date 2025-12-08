@@ -7,20 +7,7 @@ import MasonryGallery from "@/components/MasonryGallery";
 import Lightbox from "@/components/Lightbox";
 import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
-
-interface GalleryImage {
-  type?: 'image' | 'video';
-  src: string;
-  videoSrc?: string;
-  highResSrc?: string;
-  alt: string;
-  photographer?: string;
-  client?: string;
-  location?: string;
-  details?: string;
-  width?: number;
-  height?: number;
-}
+import { GalleryImage } from "@/types/gallery";
 
 const validCategories = ['selected', 'commissioned', 'editorial', 'personal', 'all'];
 
