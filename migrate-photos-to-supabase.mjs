@@ -16,8 +16,11 @@ dotenv.config();
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
+// Note: For production use, you may need a service role key for storage uploads
+// If uploads fail with permission errors, use SUPABASE_SERVICE_ROLE_KEY instead
 if (!supabaseUrl || !supabaseKey) {
   console.error('Missing Supabase credentials in .env file');
+  console.error('Required: VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY');
   process.exit(1);
 }
 
