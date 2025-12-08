@@ -9,8 +9,10 @@ RETURNS TRIGGER AS $$
 BEGIN
   -- Insert new user into user_roles with 'user' role by default
   -- This happens automatically when a user signs up via Supabase Auth
+  -- ON CONFLICT DO NOTHING prevents errors if the user already exists (e.g., race conditions)
   INSERT INTO public.user_roles (user_id, role)
-  VALUES (NEW.id, 'user');
+  VALUES (NEW.id, 'user')
+  ON CONFLICT (user_id, role) DO NOTHING;
   
   RETURN NEW;
 END;
