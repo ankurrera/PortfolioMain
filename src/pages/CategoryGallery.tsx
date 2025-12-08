@@ -33,13 +33,19 @@ const CategoryGallery = () => {
         setLoading(true);
         setError(null);
         
-        // Fetch published photos from Supabase for the selected category
-        const { data, error: fetchError } = await supabase
+        // Build query based on category - 'all' fetches from all categories
+        let query = supabase
           .from('photos')
           .select('*')
-          .eq('category', category!.toLowerCase())
           .eq('is_draft', false)
           .order('display_order', { ascending: true });
+
+        // Only filter by category if not 'all'
+        if (category!.toLowerCase() !== 'all') {
+          query = query.eq('category', category!.toLowerCase());
+        }
+
+        const { data, error: fetchError } = await query;
 
         if (fetchError) throw fetchError;
 
@@ -67,7 +73,7 @@ const CategoryGallery = () => {
     };
 
     loadImages();
-  }, [category, categoryUpper, page, isValidCategory]);
+  }, [category, page, isValidCategory]);
 
   const handleImageClick = (index: number) => {
     setLightboxIndex(index);
