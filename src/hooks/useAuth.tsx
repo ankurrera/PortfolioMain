@@ -44,8 +44,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         
         // Wait for admin check to complete before setting isLoading to false
         if (session?.user) {
-          const isAdminUser = await checkAdminRole(session.user.id);
-          setIsAdmin(isAdminUser);
+          try {
+            const isAdminUser = await checkAdminRole(session.user.id);
+            setIsAdmin(isAdminUser);
+          } catch (error) {
+            console.error('Error checking admin role:', error);
+            setIsAdmin(false);
+          }
         } else {
           setIsAdmin(false);
         }
@@ -54,16 +59,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     );
 
     // THEN check for existing session
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    const initializeAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        const isAdminUser = await checkAdminRole(session.user.id);
-        setIsAdmin(isAdminUser);
+        try {
+          const isAdminUser = await checkAdminRole(session.user.id);
+          setIsAdmin(isAdminUser);
+        } catch (error) {
+          console.error('Error checking admin role:', error);
+          setIsAdmin(false);
+        }
       }
       setIsLoading(false);
-    });
+    };
+    
+    initializeAuth();
 
     return () => subscription.unsubscribe();
   }, []);
