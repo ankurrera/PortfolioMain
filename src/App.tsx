@@ -18,7 +18,14 @@ import ErrorBoundary from "./components/ErrorBoundary";
 const queryClient = new QueryClient();
 
 /**
- * Component to manage body classes based on route
+ * Component to manage body classes based on route.
+ * 
+ * Note: Uses two separate useEffect hooks to prevent flash:
+ * 1. First effect manages class based on route changes (no cleanup on dependency change)
+ * 2. Second effect only cleans up on component unmount
+ * 
+ * This prevents the class from being briefly removed when navigating between admin routes
+ * (e.g., /admin/login -> /admin), which would cause a visual flash.
  */
 const BodyClassManager = () => {
   const location = useLocation();
@@ -34,7 +41,9 @@ const BodyClassManager = () => {
     }
   }, [location.pathname]);
   
-  // Cleanup only on component unmount
+  // Separate cleanup effect that only runs on component unmount
+  // This ensures the class is removed when the app unmounts, but doesn't
+  // interfere with route changes (which would cause a flash)
   useEffect(() => {
     return () => {
       document.body.classList.remove('admin-dashboard');
