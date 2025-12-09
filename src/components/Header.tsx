@@ -3,6 +3,13 @@ import { Menu, X, Instagram, Mail } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import FocusTrap from "focus-trap-react";
 
+/**
+ * Header component used primarily in error states (ErrorBoundary).
+ * Uses standard HTML <a> tags instead of React Router <Link> to ensure
+ * it can render when Router context is unavailable.
+ * Note: This causes full page reloads instead of client-side navigation,
+ * but ensures the component works in error scenarios.
+ */
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);

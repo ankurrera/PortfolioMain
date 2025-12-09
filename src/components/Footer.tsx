@@ -1,5 +1,12 @@
 import { Instagram, Mail } from "lucide-react";
 
+/**
+ * Footer component used primarily in error states (ErrorBoundary).
+ * Uses standard HTML <a> tags instead of React Router <Link> to ensure
+ * it can render when Router context is unavailable.
+ * Note: This causes full page reloads instead of client-side navigation,
+ * but ensures the component works in error scenarios.
+ */
 const Footer = () => {
   return (
     <footer className="border-t border-border pt-16 pb-8 px-8">
