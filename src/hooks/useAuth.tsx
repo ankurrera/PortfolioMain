@@ -95,13 +95,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { error };
     }
     
-    // Log successful signup for debugging (only in development)
+    // Log successful signup for debugging (only in development, no PII)
     if (import.meta.env.DEV) {
       console.log('SignUp successful:', {
-        userId: data.user?.id,
-        email: data.user?.email,
+        hasUser: !!data.user,
         emailConfirmed: !!data.user?.confirmed_at,
-        session: !!data.session
+        hasSession: !!data.session
       });
       
       // If user was created but no session (email confirmation required)

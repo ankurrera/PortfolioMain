@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
   -- Insert new user into user_roles with 'user' role by default
+  -- The 'user' role is hardcoded as it's the default role defined in the app_role enum
   -- This happens automatically when a user signs up via Supabase Auth
   -- ON CONFLICT DO NOTHING prevents errors if the user already exists
   -- Note: The table has UNIQUE (user_id, role) constraint, allowing multiple roles per user
