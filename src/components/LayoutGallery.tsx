@@ -62,16 +62,51 @@ const LayoutGallery = ({ images, onImageClick }: LayoutGalleryProps) => {
     ? [...images].sort((a, b) => (a.z_index || 0) - (b.z_index || 0))
     : images;
 
+  // Calculate container height based on positioned content
+  const calculateContainerHeight = () => {
+    if (!hasLayoutData || sortedImages.length === 0) {
+      return 600; // Fallback minimum height
+    }
+
+    let maxExtent = 0;
+    sortedImages.forEach((image) => {
+      const {
+        position_y = 0,
+        height = 400,
+        scale = 1,
+      } = image;
+      
+      // Calculate the bottom extent of each image considering scale
+      // Since images are centered on their transform origin, we need to account for scale expansion
+      const scaledHeight = height * scale;
+      const scaleOffset = (scaledHeight - height) / 2; // How much scale pushes the image down
+      const bottomExtent = position_y + height + scaleOffset;
+      
+      maxExtent = Math.max(maxExtent, bottomExtent);
+    });
+
+    // Add padding to ensure content isn't cut off
+    return Math.max(600, maxExtent + 100);
+  };
+
+  const containerHeight = calculateContainerHeight();
+
   return (
     <div className={`max-w-[${LAYOUT_MAX_WIDTH}px] mx-auto px-3 md:px-5 pb-16`}>
       {hasLayoutData ? (
         // WYSIWYG Layout Mode - respects admin positioning
         // Uses CSS transforms to scale entire layout on smaller screens
-        <div className="relative min-h-[600px] overflow-hidden">
+        <div 
+          className="relative" 
+          style={{ 
+            minHeight: `${containerHeight}px`,
+          }}
+        >
           <div className="relative origin-top-left" style={{
             transform: 'scale(var(--layout-scale, 1))',
             // On mobile, scale down to fit screen
             '--layout-scale': `min(1, calc(100vw / ${LAYOUT_MAX_WIDTH}))`,
+            minHeight: `${containerHeight}px`,
           } as React.CSSProperties}>
             {sortedImages.map((image, index) => {
               const {
