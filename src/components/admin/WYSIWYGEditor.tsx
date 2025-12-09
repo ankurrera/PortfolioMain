@@ -66,7 +66,7 @@ export default function WYSIWYGEditor({ category, onCategoryChange, onSignOut }:
         setHistoryInitialized(true);
       }
     } catch (error) {
-      console.error('Error fetching photos:', error);
+      console.error('Error fetching photos:', error instanceof Error ? error.message : error);
       toast.error('Failed to load photos');
     } finally {
       setLoading(false);
@@ -318,7 +318,7 @@ export default function WYSIWYGEditor({ category, onCategoryChange, onSignOut }:
         onSignOut={onSignOut}
       />
 
-      <div className="pt-0 min-h-screen bg-background">
+      <div className="pt-16 min-h-screen bg-background">
         {/* Preview Container */}
         <div 
           className="mx-auto transition-all duration-300"
