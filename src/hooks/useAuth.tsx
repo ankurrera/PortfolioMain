@@ -79,11 +79,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signUp = async (email: string, password: string) => {
-    const redirectUrl = `${window.location.origin}/`;
+    // Sign up without email confirmation requirement
+    // Users can login immediately after signup
     const { error } = await supabase.auth.signUp({
       email,
-      password,
-      options: { emailRedirectTo: redirectUrl }
+      password
     });
     return { error };
   };
