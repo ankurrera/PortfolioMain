@@ -25,12 +25,21 @@ const BodyClassManager = () => {
   
   useEffect(() => {
     // Add or remove 'admin-dashboard' class to body based on route
-    if (location.pathname.startsWith('/admin')) {
+    const isAdminRoute = location.pathname.startsWith('/admin');
+    
+    if (isAdminRoute) {
       document.body.classList.add('admin-dashboard');
     } else {
       document.body.classList.remove('admin-dashboard');
     }
   }, [location.pathname]);
+  
+  // Cleanup only on component unmount
+  useEffect(() => {
+    return () => {
+      document.body.classList.remove('admin-dashboard');
+    };
+  }, []);
   
   return null;
 };
