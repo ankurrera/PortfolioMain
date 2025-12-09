@@ -79,13 +79,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signUp = async (email: string, password: string) => {
-    // Sign up without email confirmation requirement
-    // Users can login immediately after signup
-    const { error } = await supabase.auth.signUp({
+    // Sign up with Supabase Authentication
+    // Note: For immediate access, email confirmation must be disabled in Supabase dashboard
+    // Go to: Authentication > Providers > Email > Disable "Confirm email"
+    const { data, error } = await supabase.auth.signUp({
       email,
-      password
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/admin/login`,
+      }
     });
-    return { error };
+    
+    if (error) {
+      console.error('SignUp error:', error);
+      return { error };
+    }
+    
+    // Log successful signup for debugging
+    console.log('SignUp successful:', {
+      userId: data.user?.id,
+      email: data.user?.email,
+      emailConfirmed: !!data.user?.confirmed_at,
+      session: !!data.session
+    });
+    
+    // If user was created but no session (email confirmation required)
+    if (data.user && !data.session) {
+      console.warn('User created but email confirmation is required. Please check email or disable confirmation in Supabase settings.');
+    }
+    
+    return { error: null };
   };
 
   const signOut = async () => {
