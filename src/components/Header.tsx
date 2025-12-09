@@ -1,15 +1,9 @@
 import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import { Menu, X, Instagram, Mail } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import FocusTrap from "focus-trap-react";
 
-/**
- * Header component used primarily in error states (ErrorBoundary).
- * Uses standard HTML <a> tags instead of React Router <Link> to ensure
- * it can render when Router context is unavailable.
- * Note: This causes full page reloads instead of client-side navigation,
- * but ensures the component works in error scenarios.
- */
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -44,20 +38,20 @@ const Header = () => {
       
       <header className="fixed top-0 left-0 right-0 z-50 py-6 px-8 flex items-center justify-between bg-background/90 backdrop-blur-sm">
         <nav className="hidden md:flex gap-x-8 text-sm uppercase tracking-widest">
-          <a href="/" className="hover:opacity-60 transition-opacity duration-300">
+          <Link to="/" className="hover:opacity-60 transition-opacity duration-300">
             Home
-          </a>
-          <a href="/about" className="hover:opacity-60 transition-opacity duration-300">
+          </Link>
+          <Link to="/about" className="hover:opacity-60 transition-opacity duration-300">
             About
-          </a>
+          </Link>
         </nav>
 
-        <a 
-          href="/" 
+        <Link 
+          to="/" 
           className="text-2xl font-light tracking-wide absolute left-1/2 -translate-x-1/2"
         >
           Raya
-        </a>
+        </Link>
 
         <div className="hidden md:flex gap-x-4 text-sm items-center">
           <ThemeToggle />
@@ -115,20 +109,20 @@ const Header = () => {
             aria-label="Main navigation"
           >
             <nav>
-              <a
-                href="/"
+              <Link
+                to="/"
                 className="text-3xl font-light tracking-tight hover:opacity-60 transition-opacity duration-300 block py-3"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
-              </a>
-              <a
-                href="/about"
+              </Link>
+              <Link
+                to="/about"
                 className="text-3xl font-light tracking-tight hover:opacity-60 transition-opacity duration-300 block py-3"
                 onClick={() => setIsMenuOpen(false)}
               >
                 About
-              </a>
+              </Link>
             </nav>
             <div className="flex gap-x-6 mt-8 items-center">
               <ThemeToggle />

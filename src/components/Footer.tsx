@@ -1,12 +1,6 @@
+import { Link } from "react-router-dom";
 import { Instagram, Mail } from "lucide-react";
 
-/**
- * Footer component used primarily in error states (ErrorBoundary).
- * Uses standard HTML <a> tags instead of React Router <Link> to ensure
- * it can render when Router context is unavailable.
- * Note: This causes full page reloads instead of client-side navigation,
- * but ensures the component works in error scenarios.
- */
 const Footer = () => {
   return (
     <footer className="border-t border-border pt-16 pb-8 px-8">
@@ -16,18 +10,18 @@ const Footer = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 max-w-7xl mx-auto">
         <nav className="flex flex-col gap-y-3">
-          <a 
-            href="/" 
+          <Link 
+            to="/" 
             className="text-sm uppercase tracking-widest underline hover:no-underline transition-all duration-300"
           >
             Home
-          </a>
-          <a 
-            href="/about" 
+          </Link>
+          <Link 
+            to="/about" 
             className="text-sm uppercase tracking-widest underline hover:no-underline transition-all duration-300"
           >
             About
-          </a>
+          </Link>
         </nav>
         
         <div className="flex flex-col gap-y-3 md:items-end">
