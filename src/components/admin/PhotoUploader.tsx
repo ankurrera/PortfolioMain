@@ -52,7 +52,13 @@ export default function PhotoUploader({ category, onUploadComplete }: PhotoUploa
     try {
       // Compress image
       const compressedBlob = await compressImage(file);
-      const fileName = `${category}/${Date.now()}-${file.name.replace(/\.[^/.]+$/, '')}.webp`;
+      // Sanitize filename: remove extension, replace non-alphanumeric chars with hyphens
+      const sanitizedName = file.name
+        .replace(/\.[^/.]+$/, '') // Remove extension
+        .replace(/[^a-zA-Z0-9]/g, '-') // Replace non-alphanumeric with hyphens
+        .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+        .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+      const fileName = `${category}/${Date.now()}-${sanitizedName || 'photo'}.webp`;
       
       // Upload to storage
       const { error: uploadError } = await supabase.storage
@@ -113,7 +119,7 @@ export default function PhotoUploader({ category, onUploadComplete }: PhotoUploa
 
       return file.name;
     } catch (error) {
-      console.error('Upload error:', error);
+      console.error('Upload error:', error instanceof Error ? error.message : error);
       throw error;
     }
   }, [category, compressImage]);
