@@ -66,9 +66,12 @@ export default function WYSIWYGEditor({ category, onCategoryChange, onSignOut }:
     
     // Set timeout fallback - if fetch doesn't complete in 10 seconds, show error
     refreshTimeoutRef.current = setTimeout(() => {
-      if (isRefresh && isRefreshing) {
+      if (isRefresh) {
         setIsRefreshing(false);
         toast.error('Request timed out. Please check your connection and try again.');
+      } else {
+        setLoading(false);
+        toast.error('Failed to load photos: Request timed out. Please check your connection.');
       }
     }, 10000);
     
@@ -77,7 +80,8 @@ export default function WYSIWYGEditor({ category, onCategoryChange, onSignOut }:
         .from('photos')
         .select('*')
         .eq('category', category as 'selected' | 'commissioned' | 'editorial' | 'personal')
-        .order('z_index', { ascending: true });
+        .order('z_index', { ascending: true })
+        .abortSignal(abortControllerRef.current.signal);
 
       if (error) throw error;
       
@@ -101,7 +105,7 @@ export default function WYSIWYGEditor({ category, onCategoryChange, onSignOut }:
       }
     } catch (error: any) {
       // Don't show error if request was aborted (user triggered another action)
-      if (error.name === 'AbortError') {
+      if (error.name === 'AbortError' || abortControllerRef.current?.signal.aborted) {
         return;
       }
       
