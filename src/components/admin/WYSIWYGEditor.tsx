@@ -138,6 +138,21 @@ export default function WYSIWYGEditor({ category, onCategoryChange, onSignOut }:
     };
   }, [category]);
 
+  // Handle device preview changes to ensure layout recalculation
+  useEffect(() => {
+    // Force a re-render of draggable components when device preview changes
+    // This ensures motion library recalculates positions and placeholders
+    if (devicePreview !== 'desktop') {
+      // Trigger a small layout update to ensure motion components recalculate
+      const timer = setTimeout(() => {
+        // Force browser to recalculate layout
+        window.dispatchEvent(new Event('resize'));
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [devicePreview]);
+
   // Add to history
   const addToHistory = useCallback((newPhotos: PhotoLayoutData[], description?: string) => {
     const newEntry: HistoryEntry = {
