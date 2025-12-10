@@ -38,11 +38,8 @@ CREATE TRIGGER on_auth_user_created
   FOR EACH ROW
   EXECUTE FUNCTION public.handle_new_user_with_first_admin();
 
--- Note: This migration does NOT fix existing users who were created without roles.
--- If you have existing users without roles in user_roles table, you need to manually
--- insert them. Example:
+-- Note: This migration fixes the trigger for FUTURE users.
+-- Existing users who were created without roles are fixed by the companion migration:
+-- 20251210072758_backfill_missing_user_roles.sql
 -- 
--- INSERT INTO public.user_roles (user_id, role)
--- SELECT id, 'user' FROM auth.users
--- WHERE id NOT IN (SELECT user_id FROM public.user_roles)
--- ON CONFLICT (user_id, role) DO NOTHING;
+-- If you're running migrations individually, make sure to run both migrations.
