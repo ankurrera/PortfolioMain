@@ -238,23 +238,47 @@ This ensures consistent display order across all layout modes.
 
 ## Technical Notes
 
-### Why `minmax(0, 1fr)` instead of `repeat(4, auto)`?
+### Why `minmax(0, 1fr)` for tablet grid columns?
 
-The requirements specify `repeat(4, auto)`, but this can cause horizontal scrolling when images are large. Using `minmax(0, 1fr)`:
-- Distributes available space equally among 4 columns
-- Prevents overflow with `minmax(0, ...)` constraint
-- Maintains responsive 4-column layout
-- Works seamlessly with `w-full` on grid items
+The implementation uses `repeat(4, minmax(0, 1fr))` rather than plain `repeat(4, 1fr)` or `repeat(4, auto)`:
 
-The `minmax(0, 1fr)` approach maintains the intent (4-column layout respecting aspect ratios) while ensuring no horizontal scrolling.
+- **`minmax(0, 1fr)` benefits:**
+  - Distributes available space equally among 4 columns (from `1fr`)
+  - Prevents column overflow with `minmax(0, ...)` constraint
+  - Each column can shrink to 0 if needed, preventing grid from exceeding container
+  - Works seamlessly with `w-full` on grid items
+  - Maintains responsive 4-column layout without horizontal scrolling
 
-### Why padding-bottom instead of aspect-ratio?
+- **Why not `repeat(4, auto)`?**
+  - `auto` columns size to content, which could exceed viewport width
+  - Combined with large images, this causes horizontal scrolling
+  - Doesn't work well with `w-full` items (circular dependency)
 
-The `aspect-ratio` CSS property is modern and well-supported, but padding-bottom:
-- Has universal browser support
-- Works reliably with absolute positioning
-- Integrates well with the existing image loading pattern
-- Provides consistent behavior across all devices
+- **Why not plain `repeat(4, 1fr)`?**
+  - Without `minmax(0, ...)`, columns might not shrink properly in edge cases
+  - `minmax(0, 1fr)` is more defensive against overflow
+
+The approach maintains the intent (4-column layout respecting aspect ratios) while guaranteeing no horizontal scrolling.
+
+### Padding-bottom technique for aspect ratios
+
+The implementation uses the padding-bottom technique rather than the modern `aspect-ratio` CSS property:
+
+```tsx
+<div style={{ paddingBottom: `${aspectRatio * 100}%` }}>
+  <div className="absolute inset-0">
+    <img className="w-full h-full object-cover" />
+  </div>
+</div>
+```
+
+**Rationale:**
+- **Consistency**: Existing codebase already uses padding-bottom throughout
+- **Proven reliability**: Well-tested pattern with predictable behavior
+- **Integration**: Works seamlessly with absolute positioning and loading states
+- **Cross-browser**: Universal support including older browsers
+
+**Note:** The modern `aspect-ratio` property could be considered in a future refactor, as it has excellent browser support as of 2024 and provides cleaner, more semantic code. However, this would require updating the entire gallery implementation for consistency.
 
 ## Future Improvements
 
