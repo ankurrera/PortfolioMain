@@ -468,9 +468,8 @@ export default function WYSIWYGEditor({ category, onCategoryChange, onSignOut }:
         <div className="flex-1 w-full flex justify-center px-2 sm:px-4 min-w-0">
           {/* Device Frame - with visible dashed border for tablet/mobile */}
           <div 
-            className="transition-all duration-300 flex flex-col relative min-w-0"
+            className="transition-all duration-300 flex flex-col relative min-w-0 w-full"
             style={{ 
-              width: getDeviceWidth(),
               maxWidth: devicePreview === 'desktop' ? `${DESKTOP_CANVAS_WIDTH}px` : getDeviceWidth(),
             }}
           >
@@ -498,10 +497,9 @@ export default function WYSIWYGEditor({ category, onCategoryChange, onSignOut }:
 
                 {/* Photo Canvas - Dynamic height based on content */}
                 <div 
-                  className="gallery-wrapper-outer relative mx-auto"
+                  className="gallery-wrapper-outer relative mx-auto w-full"
                   style={{
-                    width: devicePreview === 'desktop' ? '100%' : getDeviceWidth(),
-                    maxWidth: devicePreview === 'desktop' ? `${DESKTOP_CANVAS_WIDTH}px` : 'none',
+                    maxWidth: devicePreview === 'desktop' ? `${DESKTOP_CANVAS_WIDTH}px` : getDeviceWidth(),
                   }}
                 >
                   <div 
