@@ -13,7 +13,11 @@ import { GalleryImage, DEFAULT_PHOTO_WIDTH, DEFAULT_PHOTO_HEIGHT } from "@/types
 
 const validCategories = ['selected', 'commissioned', 'editorial', 'personal', 'all'];
 
-const CategoryGallery = () => {
+interface CategoryGalleryProps {
+  redirectToPhotoshoots?: boolean;
+}
+
+const CategoryGallery = ({ redirectToPhotoshoots = false }: CategoryGalleryProps) => {
   const { category } = useParams<{ category: string }>();
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,6 +30,11 @@ const CategoryGallery = () => {
 
   // Validate category first, before hooks
   const isValidCategory = category && validCategories.includes(category.toLowerCase());
+
+  // Redirect old /category/:category routes to new /photoshoots/:category routes
+  if (redirectToPhotoshoots && isValidCategory) {
+    return <Navigate to={`/photoshoots/${category}`} replace />;
+  }
 
   const categoryUpper = category ? category.toUpperCase() : '';
 
@@ -168,7 +177,7 @@ const CategoryGallery = () => {
     "@type": "CollectionPage",
     "name": `${getCategoryTitle(category)} - Ankur Bag`,
     "description": getCategoryDescription(category),
-    "url": `https://morganblake.com/category/${category}`,
+    "url": `https://morganblake.com/photoshoots/${category}`,
     "creator": {
       "@type": "Person",
       "name": "Ankur Bag"
@@ -180,7 +189,7 @@ const CategoryGallery = () => {
       <SEO
         title={`${getCategoryTitle(category)} - Ankur Bag`}
         description={getCategoryDescription(category)}
-        canonicalUrl={`/category/${category}`}
+        canonicalUrl={`/photoshoots/${category}`}
         jsonLd={jsonLd}
       />
 
