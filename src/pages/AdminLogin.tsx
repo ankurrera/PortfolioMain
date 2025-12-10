@@ -83,10 +83,11 @@ const AdminLogin = forwardRef<HTMLDivElement>(function AdminLogin(_, ref) {
 
         // Set flag to trigger navigation after admin verification completes
         setAttemptingLogin(true);
-        // Note: Don't set isLoading to false here - keep it true until navigation happens
+        // Note: Keep isLoading true until navigation completes in the useEffect hook
       }
     } catch (error) {
-      console.error('Login error:', error);
+      // Defensive: Handle any unexpected errors not caught by signIn/signUp
+      console.error('Unexpected login error:', error);
       setIsLoading(false);
       setAttemptingLogin(false);
     }
