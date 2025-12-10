@@ -119,7 +119,9 @@ All colors MUST be HSL.
     overflow-x: hidden;
   }
 
-  /* Gallery wrapper - prevents unwanted shifts */
+  /* Gallery wrapper and container - prevents unwanted shifts during device preview */
+  /* Using !important is intentional here to override any dynamic styles that might 
+     be applied by drag libraries or other scripts during preview mode transitions */
   .gallery-wrapper {
     position: relative;
     margin-left: 0 !important;
@@ -127,7 +129,6 @@ All colors MUST be HSL.
     transform: none !important;
   }
 
-  /* Gallery container - centers content, no shifts */
   .gallery {
     position: relative;
     margin-left: 0 !important;

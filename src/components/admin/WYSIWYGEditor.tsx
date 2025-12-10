@@ -143,13 +143,13 @@ export default function WYSIWYGEditor({ category, onCategoryChange, onSignOut }:
     // Force a re-render of draggable components when device preview changes
     // This ensures motion library recalculates positions and placeholders
     if (devicePreview !== 'desktop') {
-      // Trigger a small layout update to ensure motion components recalculate
-      const timer = setTimeout(() => {
-        // Force browser to recalculate layout
+      // Use requestAnimationFrame for better performance
+      const frame = requestAnimationFrame(() => {
+        // Trigger layout recalculation by dispatching resize event
         window.dispatchEvent(new Event('resize'));
-      }, 100);
+      });
       
-      return () => clearTimeout(timer);
+      return () => cancelAnimationFrame(frame);
     }
   }, [devicePreview]);
 
@@ -452,11 +452,7 @@ export default function WYSIWYGEditor({ category, onCategoryChange, onSignOut }:
             {devicePreview !== 'desktop' && (
               <>
                 <div 
-                  className="absolute inset-0 pointer-events-none z-10 border-2 border-dashed opacity-50"
-                  style={{
-                    borderColor: 'hsl(var(--muted-foreground))',
-                    borderRadius: '4px',
-                  }}
+                  className="absolute inset-0 pointer-events-none z-10 border-2 border-dashed border-muted-foreground/50 rounded"
                   aria-label={`${devicePreview} preview frame`}
                 />
                 {/* Device preview label */}
