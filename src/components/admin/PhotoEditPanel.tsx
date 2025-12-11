@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -97,9 +97,9 @@ export default function PhotoEditPanel({ photo, onClose, onUpdate }: PhotoEditPa
     }
   };
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     onClose();
-  };
+  }, [onClose]);
 
   // Handle Escape key
   useEffect(() => {
@@ -111,7 +111,7 @@ export default function PhotoEditPanel({ photo, onClose, onUpdate }: PhotoEditPa
 
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
-  }, []);
+  }, [handleCancel]);
 
   return (
     <div className="fixed inset-y-0 right-0 w-full sm:w-96 bg-background border-l shadow-lg z-50 overflow-y-auto">

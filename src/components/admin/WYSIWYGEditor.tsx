@@ -109,9 +109,12 @@ export default function WYSIWYGEditor({ category, onCategoryChange, onSignOut }:
       if (isRefresh) {
         toast.success('Photos refreshed successfully');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Don't show error if request was aborted (user triggered another action)
-      if (error.name === 'AbortError' || abortControllerRef.current?.signal.aborted) {
+      if (error && typeof error === 'object' && 'name' in error && error.name === 'AbortError') {
+        return;
+      }
+      if (abortControllerRef.current?.signal.aborted) {
         return;
       }
       
@@ -187,7 +190,7 @@ export default function WYSIWYGEditor({ category, onCategoryChange, onSignOut }:
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedPhotoId, editingPhotoId]);
+  }, [selectedPhotoId, editingPhotoId, handlePhotoDelete]);
 
   // Add to history
   const addToHistory = useCallback((newPhotos: PhotoLayoutData[], description?: string) => {
