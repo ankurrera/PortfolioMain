@@ -163,7 +163,7 @@ export default function PhotoEditPanel({ photo, onClose, onUpdate }: PhotoEditPa
         <img
           src={photo.image_url}
           alt={photo.title || 'Photo'}
-          className="w-full h-48 object-cover rounded"
+          className="w-full h-48 object-contain rounded"
         />
       </div>
 
