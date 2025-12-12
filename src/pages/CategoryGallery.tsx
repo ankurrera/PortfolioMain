@@ -93,6 +93,9 @@ const CategoryGallery = () => {
           scale: photo.scale,
           rotation: photo.rotation,
           z_index: photo.z_index,
+          // Include metadata fields for hover display
+          photographer_name: photo.photographer_name || null,
+          date_taken: photo.date_taken || null,
         }));
 
         setImages(transformedImages);
