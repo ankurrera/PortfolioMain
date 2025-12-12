@@ -120,7 +120,7 @@ const AdminDashboard = () => {
         </section>
 
         {/* Technical Projects Section */}
-        <section>
+        <section className="mb-12">
           <div className="flex items-center gap-2 mb-6">
             <Code2 className="h-5 w-5 text-foreground" />
             <h2 className="text-lg font-semibold uppercase tracking-wider">Technical Projects</h2>
@@ -141,6 +141,33 @@ const AdminDashboard = () => {
             <CardContent>
               <Button variant="outline" size="sm" className="w-full">
                 Edit Projects
+              </Button>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Artistic Section */}
+        <section>
+          <div className="flex items-center gap-2 mb-6">
+            <Camera className="h-5 w-5 text-foreground" />
+            <h2 className="text-lg font-semibold uppercase tracking-wider">Artistic</h2>
+          </div>
+          
+          <Card 
+            className="hover:border-foreground/20 transition-all duration-300 cursor-pointer max-w-md"
+            onClick={() => navigate('/admin/artistic/edit')}
+          >
+            <CardHeader>
+              <CardTitle className="text-base uppercase tracking-wider">
+                Artistic Works
+              </CardTitle>
+              <CardDescription className="text-sm">
+                Manage artistic photography and creative works
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button variant="outline" size="sm" className="w-full">
+                Edit Artworks
               </Button>
             </CardContent>
           </Card>
