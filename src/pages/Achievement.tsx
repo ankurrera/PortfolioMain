@@ -25,7 +25,7 @@ const Achievement = () => {
       abortControllerRef.current = new AbortController();
       const timeoutId = setTimeout(() => {
         abortControllerRef.current?.abort();
-      }, 15000); // 15 second timeout
+      }, 8000); // 8 second timeout
 
       try {
         setLoading(true);

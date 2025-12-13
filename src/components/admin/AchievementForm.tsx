@@ -79,10 +79,18 @@ const AchievementForm = ({ achievement, onSave, onCancel }: AchievementFormProps
       setIsUploading(true);
 
       // Get image dimensions
-      const dimensions = await new Promise<{ width: number; height: number }>((resolve) => {
+      const dimensions = await new Promise<{ width: number; height: number }>((resolve, reject) => {
+        const objectUrl = URL.createObjectURL(file);
         const img = new Image();
-        img.onload = () => resolve({ width: img.width, height: img.height });
-        img.src = URL.createObjectURL(file);
+        img.onload = () => {
+          URL.revokeObjectURL(objectUrl); // Clean up memory
+          resolve({ width: img.width, height: img.height });
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(objectUrl); // Clean up memory on error too
+          reject(new Error('Failed to load image'));
+        };
+        img.src = objectUrl;
       });
 
       // Generate unique filename
@@ -152,7 +160,7 @@ const AchievementForm = ({ achievement, onSave, onCancel }: AchievementFormProps
         description: description.trim() || null,
         category,
         image_url: imageUrl,
-        image_original_url: imageUrl, // Same as image_url for now
+        image_original_url: imageUrl,
         image_width: imageWidth,
         image_height: imageHeight,
         display_order: displayOrder,
