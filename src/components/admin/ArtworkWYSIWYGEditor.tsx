@@ -378,8 +378,8 @@ export default function ArtworkWYSIWYGEditor({ onSignOut }: ArtworkWYSIWYGEditor
         mode={mode}
         devicePreview={devicePreview}
         snapToGrid={snapToGrid}
-        canUndo={false} // Undo/redo not implemented for artwork editor
-        canRedo={false} // Undo/redo not implemented for artwork editor
+        canUndo={false} // TODO: Implement undo/redo history for artwork editor (similar to WYSIWYGEditor)
+        canRedo={false} // TODO: Implement undo/redo history for artwork editor (similar to WYSIWYGEditor)
         hasChanges={hasUnsavedChanges}
         category={'artistic' as 'selected' | 'commissioned' | 'editorial' | 'personal' | 'artistic'}
         isRefreshing={isRefreshing}
