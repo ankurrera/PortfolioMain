@@ -67,7 +67,10 @@ export function Testimonial({ testimonials = defaultTestimonials }: TestimonialP
   const goPrev = () => setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
 
   useEffect(() => {
-    const timer = setInterval(goNext, 6000)
+    if (testimonials.length === 0) return
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % testimonials.length)
+    }, 6000)
     return () => clearInterval(timer)
   }, [testimonials.length])
 

@@ -40,7 +40,10 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
   const goPrev = () => setActiveIndex((prev) => (prev - 1 + projects.length) % projects.length)
 
   useEffect(() => {
-    const timer = setInterval(goNext, 6000)
+    if (projects.length === 0) return
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % projects.length)
+    }, 6000)
     return () => clearInterval(timer)
   }, [projects.length])
 
@@ -112,7 +115,11 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
               >
                 <span className="inline-flex items-center gap-2 text-xs font-mono text-muted-foreground border border-border rounded-full px-3 py-1">
                   <span className={`w-1.5 h-1.5 rounded-full ${
-                    current.status === 'Live' ? 'bg-success' : 'bg-warning'
+                    current.status?.toLowerCase() === 'live' 
+                      ? 'bg-success' 
+                      : current.status?.toLowerCase() === 'in development' 
+                      ? 'bg-warning' 
+                      : 'bg-muted-foreground'
                   }`} />
                   {current.status || 'Live'}
                 </span>
