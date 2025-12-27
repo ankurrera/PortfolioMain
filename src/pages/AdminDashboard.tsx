@@ -125,24 +125,45 @@ const AdminDashboard = () => {
             <h2 className="text-lg font-semibold uppercase tracking-wider">Technical Projects</h2>
           </div>
           
-          <Card 
-            className="hover:border-foreground/20 transition-all duration-300 cursor-pointer max-w-md"
-            onClick={() => navigate('/admin/technical/edit')}
-          >
-            <CardHeader>
-              <CardTitle className="text-base uppercase tracking-wider">
-                Technical Portfolio
-              </CardTitle>
-              <CardDescription className="text-sm">
-                Manage technical projects, descriptions, links, and technologies
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button variant="outline" size="sm" className="w-full">
-                Edit Projects
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl">
+            <Card 
+              className="hover:border-foreground/20 transition-all duration-300 cursor-pointer"
+              onClick={() => navigate('/admin/technical/edit')}
+            >
+              <CardHeader>
+                <CardTitle className="text-base uppercase tracking-wider">
+                  Technical Portfolio
+                </CardTitle>
+                <CardDescription className="text-sm">
+                  Manage technical projects, descriptions, links, and technologies
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" size="sm" className="w-full">
+                  Edit Projects
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card 
+              className="hover:border-foreground/20 transition-all duration-300 cursor-pointer"
+              onClick={() => navigate('/admin/technical/skills/edit')}
+            >
+              <CardHeader>
+                <CardTitle className="text-base uppercase tracking-wider">
+                  Skills Manager
+                </CardTitle>
+                <CardDescription className="text-sm">
+                  Manage skill categories and items displayed in the Technical Portfolio section
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" size="sm" className="w-full">
+                  Manage Skills
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </section>
 
         {/* Artistic Section */}

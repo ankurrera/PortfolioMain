@@ -1,25 +1,15 @@
 import { motion } from 'motion/react';
 import { Card, CardContent } from '@/components/ui/card';
+import { useTechnicalSkills } from '@/hooks/useTechnicalSkills';
 
 const MinimalAbout = () => {
-  const skills = [
-    {
-      category: 'Frontend',
-      items: ['React', 'TypeScript', 'Next.js', 'Vue.js']
-    },
-    {
-      category: 'Backend',
-      items: ['Node.js', 'Python', 'PostgreSQL', 'MongoDB']
-    },
-    {
-      category: 'Tools',
-      items: ['AWS', 'Docker', 'Git', 'Figma']
-    },
-    {
-      category: 'Specialties',
-      items: ['AI/ML', 'Web3', 'Performance', 'Security']
-    }
-  ];
+  const { skills: skillsData, loading } = useTechnicalSkills();
+  
+  // Transform data to match existing structure
+  const skills = skillsData.map(skill => ({
+    category: skill.category,
+    items: skill.skills
+  }));
 
   return (
     <section id="about" className="py-section bg-muted/20">
@@ -123,8 +113,9 @@ const MinimalAbout = () => {
             }}
             className="space-y-8"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {skills.map((skillGroup, index) => (
+            {!loading && skills.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {skills.map((skillGroup, index) => (
                 <motion.div
                   key={skillGroup.category}
                   initial={{
@@ -160,6 +151,7 @@ const MinimalAbout = () => {
                 </motion.div>
               ))}
             </div>
+            )}
 
             {/* Experience Timeline */}
             <div className="space-y-6 pt-8">
