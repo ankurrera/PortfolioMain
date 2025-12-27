@@ -78,6 +78,7 @@ export const SkillCategoryList = ({
                     onClick={() => handleMoveUp(index)}
                     disabled={index === 0}
                     className="h-6 w-6 p-0"
+                    aria-label="Move category up"
                   >
                     ▲
                   </Button>
@@ -87,6 +88,7 @@ export const SkillCategoryList = ({
                     onClick={() => handleMoveDown(index)}
                     disabled={index === skills.length - 1}
                     className="h-6 w-6 p-0"
+                    aria-label="Move category down"
                   >
                     ▼
                   </Button>

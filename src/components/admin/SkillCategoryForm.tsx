@@ -116,7 +116,7 @@ export const SkillCategoryForm = ({ skill, onSave, onCancel }: SkillCategoryForm
                 value={newSkill}
                 onChange={(e) => setNewSkill(e.target.value)}
                 placeholder="Add a skill..."
-                onKeyPress={(e) => {
+                onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
                     handleAddSkill();

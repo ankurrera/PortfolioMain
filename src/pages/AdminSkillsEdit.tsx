@@ -160,19 +160,20 @@ const AdminSkillsEdit = () => {
     setSkills(reorderedSkills);
 
     try {
-      // Update order_index for all skills
-      const updates = reorderedSkills.map((skill, index) => ({
-        id: skill.id,
-        order_index: index + 1,
-      }));
-
-      for (const update of updates) {
-        const { error } = await supabase
+      // Update order_index for all skills in parallel
+      const updates = reorderedSkills.map((skill, index) => 
+        supabase
           .from('technical_skills')
-          .update({ order_index: update.order_index })
-          .eq('id', update.id);
+          .update({ order_index: index + 1 })
+          .eq('id', skill.id)
+      );
 
-        if (error) throw error;
+      const results = await Promise.all(updates);
+      
+      // Check if any updates failed
+      const errors = results.filter(r => r.error);
+      if (errors.length > 0) {
+        throw new Error(`Failed to update ${errors.length} skill(s)`);
       }
 
       toast.success('Categories reordered successfully');
