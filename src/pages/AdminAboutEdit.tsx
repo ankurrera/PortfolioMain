@@ -210,38 +210,21 @@ const AdminAboutEdit = () => {
         if (error) throw error;
       }
       
-      // Save hero text for about page
+      // Save hero text for about page using upsert
       const heroUpdateData = {
+        page_slug: 'about',
         hero_title: heroTitle || null,
         hero_subtitle: heroSubtitle || null
       };
       
-      // Check if hero text exists
-      const { data: existingHero } = await supabase
+      // Use upsert to insert or update based on page_slug uniqueness
+      const { error: heroError } = await supabase
         .from('hero_text')
-        .select('id')
-        .eq('page_slug', 'about')
-        .single();
+        .upsert(heroUpdateData, {
+          onConflict: 'page_slug'
+        });
         
-      if (existingHero) {
-        // Update existing hero text
-        const { error: heroError } = await supabase
-          .from('hero_text')
-          .update(heroUpdateData)
-          .eq('page_slug', 'about');
-          
-        if (heroError) throw heroError;
-      } else {
-        // Insert new hero text
-        const { error: heroError } = await supabase
-          .from('hero_text')
-          .insert({
-            page_slug: 'about',
-            ...heroUpdateData
-          });
-          
-        if (heroError) throw heroError;
-      }
+      if (heroError) throw heroError;
 
       toast.success('About page updated successfully');
       await loadAboutData();
