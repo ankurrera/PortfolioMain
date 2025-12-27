@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { PhotoLayoutData, EditorMode, DevicePreview, HistoryEntry, PhotoCategory } from '@/types/wysiwyg';
@@ -37,6 +37,7 @@ export default function WYSIWYGEditor({ onSignOut }: WYSIWYGEditorProps) {
   const [selectedPhotoId, setSelectedPhotoId] = useState<string | null>(null);
   const [editingPhotoId, setEditingPhotoId] = useState<string | null>(null);
   const [filterCategory, setFilterCategory] = useState<PhotoCategory | 'all'>('all');
+  const [uploadCategory, setUploadCategory] = useState<PhotoCategory>('selected');
   
   // History management
   const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -476,13 +477,25 @@ export default function WYSIWYGEditor({ onSignOut }: WYSIWYGEditorProps) {
   const canvasHeight = calculateCanvasHeight();
   const scaleFactor = getDeviceScaleFactor();
   
-  // Filter photos based on selected category filter
-  const filteredPhotos = filterCategory === 'all' 
-    ? photos 
-    : photos.filter(p => p.category === filterCategory);
+  // Filter photos based on selected category filter (memoized for performance)
+  const filteredPhotos = useMemo(() => 
+    filterCategory === 'all' 
+      ? photos 
+      : photos.filter(p => p.category === filterCategory),
+    [photos, filterCategory]
+  );
   
   // Find the photo being edited for the edit panel
   const editingPhoto = editingPhotoId ? photos.find(p => p.id === editingPhotoId) : null;
+  
+  // Handler for filter category change - also updates upload category
+  const handleFilterCategoryChange = useCallback((category: PhotoCategory | 'all') => {
+    setFilterCategory(category);
+    // When filtering by a specific category, also set it as the upload category
+    if (category !== 'all') {
+      setUploadCategory(category);
+    }
+  }, []);
 
   return (
     <>
@@ -505,7 +518,7 @@ export default function WYSIWYGEditor({ onSignOut }: WYSIWYGEditorProps) {
         onShowHistory={() => setShowHistory(true)}
         onAddPhoto={() => setShowUploader(true)}
         onRefresh={handleRefresh}
-        onFilterCategoryChange={setFilterCategory}
+        onFilterCategoryChange={handleFilterCategoryChange}
         onSignOut={onSignOut}
       />
 
@@ -625,11 +638,11 @@ export default function WYSIWYGEditor({ onSignOut }: WYSIWYGEditorProps) {
           <DialogHeader>
             <DialogTitle>Add Photos</DialogTitle>
             <DialogDescription>
-              Upload photos to add to your {category} portfolio
+              Upload photos and assign to category: {uploadCategory}
             </DialogDescription>
           </DialogHeader>
           <PhotoUploader 
-            category={category}
+            category={uploadCategory}
             onUploadComplete={handleUploadComplete}
           />
         </DialogContent>
