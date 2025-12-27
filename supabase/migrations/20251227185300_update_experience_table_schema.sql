@@ -77,7 +77,7 @@ CREATE TRIGGER update_experience_updated_at
 -- Seed with existing hardcoded experience data from MinimalAbout.tsx
 INSERT INTO experience (role_title, company_name, employment_type, start_date, end_date, is_current, display_order)
 VALUES 
-  ('Website Developer', 'Digital Indian pvt Solution', 'Full-time', '08/2025', NULL, true, 1),
+  ('Website Developer', 'Digital Indian pvt Solution', 'Full-time', '08/2024', NULL, true, 1),
   ('Google Map 360 Photographer', 'Instanovate', 'Contract', '02/2025', '03/2025', false, 2),
   ('Cinematography/ Editing', 'Freelance', 'Freelance', '2019', NULL, true, 3);
 

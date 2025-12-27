@@ -67,7 +67,16 @@ const ExperienceForm = ({ experience, onSave, onCancel }: ExperienceFormProps) =
         onSave(data as Experience);
         toast.success('Experience updated successfully');
       } else {
-        // Create new experience
+        // Create new experience - get max display_order first
+        const { data: maxOrderData } = await supabase
+          .from('experience')
+          .select('display_order')
+          .order('display_order', { ascending: false })
+          .limit(1)
+          .single();
+        
+        const nextOrder = maxOrderData ? maxOrderData.display_order + 1 : 1;
+        
         const insert = {
           role_title: roleTitle.trim(),
           company_name: companyName.trim(),
@@ -75,7 +84,7 @@ const ExperienceForm = ({ experience, onSave, onCancel }: ExperienceFormProps) =
           start_date: startDate.trim(),
           end_date: isCurrent ? null : (endDate.trim() || null),
           is_current: isCurrent,
-          display_order: 0, // Will be updated by reordering
+          display_order: nextOrder,
         };
 
         const { data, error } = await supabase
