@@ -23,6 +23,8 @@ const AdminAboutEdit = () => {
   const [profileImageUrl, setProfileImageUrl] = useState<string>('');
   const [bioText, setBioText] = useState<string>('');
   const [services, setServices] = useState<Service[]>([]);
+  const [heroTitle, setHeroTitle] = useState<string>('');
+  const [heroSubtitle, setHeroSubtitle] = useState<string>('');
 
   // Auth redirect effect
   useEffect(() => {
@@ -50,6 +52,8 @@ const AdminAboutEdit = () => {
   const loadAboutData = async () => {
     try {
       setLoading(true);
+      
+      // Load about page data
       const { data, error } = await supabase
         .from('about_page')
         .select('*')
@@ -67,6 +71,22 @@ const AdminAboutEdit = () => {
         setProfileImageUrl(data.profile_image_url || '');
         setBioText(data.bio_text || '');
         setServices(Array.isArray(data.services) ? data.services : []);
+      }
+      
+      // Load hero text for about page
+      const { data: heroData, error: heroError } = await supabase
+        .from('hero_text')
+        .select('*')
+        .eq('page_slug', 'about')
+        .single();
+        
+      if (heroError && heroError.code !== 'PGRST116') {
+        console.error('Error loading hero text:', heroError);
+      }
+      
+      if (heroData) {
+        setHeroTitle(heroData.hero_title || '');
+        setHeroSubtitle(heroData.hero_subtitle || '');
       }
     } catch (error) {
       console.error('Error loading about data:', error);
@@ -166,6 +186,7 @@ const AdminAboutEdit = () => {
     try {
       setSaving(true);
 
+      // Save about page data
       const updateData = {
         profile_image_url: profileImageUrl || null,
         bio_text: bioText || null,
@@ -187,6 +208,39 @@ const AdminAboutEdit = () => {
           .insert(updateData);
 
         if (error) throw error;
+      }
+      
+      // Save hero text for about page
+      const heroUpdateData = {
+        hero_title: heroTitle || null,
+        hero_subtitle: heroSubtitle || null
+      };
+      
+      // Check if hero text exists
+      const { data: existingHero } = await supabase
+        .from('hero_text')
+        .select('id')
+        .eq('page_slug', 'about')
+        .single();
+        
+      if (existingHero) {
+        // Update existing hero text
+        const { error: heroError } = await supabase
+          .from('hero_text')
+          .update(heroUpdateData)
+          .eq('page_slug', 'about');
+          
+        if (heroError) throw heroError;
+      } else {
+        // Insert new hero text
+        const { error: heroError } = await supabase
+          .from('hero_text')
+          .insert({
+            page_slug: 'about',
+            ...heroUpdateData
+          });
+          
+        if (heroError) throw heroError;
       }
 
       toast.success('About page updated successfully');
@@ -237,6 +291,46 @@ const AdminAboutEdit = () => {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="space-y-6">
+          {/* Hero Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Hero Section</CardTitle>
+              <CardDescription>
+                Edit the title and subtitle displayed at the top of the About page
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="hero-title">Hero Title</Label>
+                <Input
+                  id="hero-title"
+                  value={heroTitle}
+                  onChange={(e) => setHeroTitle(e.target.value)}
+                  placeholder="e.g., Ankur Bag"
+                  className="mt-2"
+                  maxLength={100}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  {heroTitle.length} / 100 characters
+                </p>
+              </div>
+              <div>
+                <Label htmlFor="hero-subtitle">Hero Subtitle</Label>
+                <Input
+                  id="hero-subtitle"
+                  value={heroSubtitle}
+                  onChange={(e) => setHeroSubtitle(e.target.value)}
+                  placeholder="e.g., PRODUCTION & PHOTOGRAPHY"
+                  className="mt-2"
+                  maxLength={200}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  {heroSubtitle.length} / 200 characters
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Profile Image Section */}
           <Card>
             <CardHeader>

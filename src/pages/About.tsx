@@ -120,7 +120,7 @@ const About = () => {
       />
 
       <PortfolioHeader
-        activeCategory=""
+        activeCategory="ABOUT"
       />
       
       <main className="flex-1">
